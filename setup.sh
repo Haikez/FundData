@@ -15,7 +15,8 @@ fi
 
 WHEEL_DIR="${PROJECT_DIR}/pip_packages"
 if ! ls "$WHEEL_DIR"/*.whl &>/dev/null 2>&1; then
-    echo "  ❌ pip_packages/ 为空，请先获取 wheel 包"
+    echo "  ❌ 未找到离线包 (pip_packages/)"
+    echo "     请从本地执行 python deploy_onecloud.py 重新部署"
     exit 1
 fi
 
