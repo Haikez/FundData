@@ -188,7 +188,7 @@ def main():
         parts = j.split()
         print(f"    {parts[0]} {parts[1]} → {parts[-1].split('/')[-1]}")
 
-    run_ssh(ssh, f"cd {PROJECT_DIR} && python3 fund_crawler.py", "首次运行", timeout=60)
+    run_ssh(ssh, f"cd {PROJECT_DIR} && python3 fund_crawler.py >> {LOG_DIR}/crawler.log 2>&1", "首次运行", timeout=60)
 
     # 清理安装文件
     print("\n🧹 清理安装文件...")
