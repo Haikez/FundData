@@ -14,7 +14,7 @@ HOST = "192.168.1.104"
 PORT = 22
 USER = "root"
 PASSWORD = "xxxx"
-LOCAL_PACKAGE = "fund007751_20260702.tar.gz"
+LOCAL_PACKAGE = "fund007751_*.tar.gz"
 REMOTE_DIR = "/opt"
 
 
