@@ -18,17 +18,15 @@
 | `deploy.sh` | 本地打包脚本（生成 `.tar.gz` 部署包） |
 | `deploy_onecloud.py` | SSH 自动部署脚本 |
 | `requirements.txt` | Python 依赖清单 |
-| `pip_packages/` | **离线 wheel 包** — `requests` 及其依赖的 `.whl` 文件，供无网络的 OneCloud 离线安装 |
+| `pip_packages/` | **离线 wheel 包** — `requests` 及其依赖的 `.whl` 文件 |
 
-### pip_packages/ 
-
-`pip_packages/` 目录包含 `requests` 及其依赖（`urllib3`, `certifi`, `idna`, `charset_normalizer`）的纯 Python wheel 包，通过以下命令生成：
+### pip_packages/ 来源
 
 ```bash
 pip download requests -d pip_packages --only-binary=:all: --platform=any
 ```
 
-**用途**：OneCloud（Armbian）可能无法访问 PyPI 或 Debian 镜像源，`setup.sh` 会自动降级到离线解压这些 `.whl` 文件到 `site-packages`。
+OneCloud（Armbian）可能无法访问 PyPI，安装方式为直接解压 `.whl` 到 `site-packages`，不依赖网络。
 
 ---
 
@@ -82,26 +80,15 @@ bash /opt/fund007751/setup.sh
 ### 方式二：Python 自动部署
 
 ```bash
-# 本地打包
-bash deploy.sh
-
-# 先修改 deploy_onecloud.py 中的 IP 和密码以及压缩包的名称
+# 先修改 deploy_onecloud.py 中的 IP 和密码
 python deploy_onecloud.py
 ```
 
 ### setup.sh 会自动完成
 
-- ✅ 安装 Python3 依赖（在线 pip → 离线 wheel，自动降级）
+- ✅ 离线安装 Python 依赖（解压 `pip_packages/*.whl`）
 - ✅ 校验 OneCloud LED 设备
 - ✅ 添加 crontab 定时任务
-
-> **依赖安装优先级**：
-> ```
-> ① pip3 install requests         (在线，最快)
-> ② python3 -m pip install ...    (在线，备选)
-> ③ 解压 pip_packages/*.whl      (离线，无网络时)
-> ④ apt install python3-pip       (最后手段)
-> ```
 
 ### crontab 最终配置
 
@@ -115,13 +102,11 @@ python deploy_onecloud.py
 
 ### 玩客云服务器目录结构
 
-部署到 OneCloud 后，项目在 `/opt/fund007751/` 下：
-
 ```
 /opt/fund007751/
 ├── fund_crawler.py              # 主程序
 ├── led_scheduler.py             # LED 定时开关
-├── setup.sh                     # 部署脚本（首次运行后保留）
+├── setup.sh                     # 部署脚本
 ├── requirements.txt             # 依赖清单
 ├── led控制伪代码.txt             # LED 原始说明
 ├── pip_packages/                # 离线 wheel 包
@@ -137,13 +122,6 @@ python deploy_onecloud.py
     ├── crawler.log              # 爬虫运行日志
     └── led.log                  # LED 定时开关日志
 ```
-
-| 文件 | 说明 |
-|------|------|
-| `fund_007751_*.json` | 每次运行自动生成的数据快照，含净值、PE、估值判断 |
-| `.led_state` | LED 状态持久化文件，供 `led_scheduler.py` 恢复灯色用 |
-| `crawler.log` | 爬虫运行日志（crontab 重定向） |
-| `led.log` | LED 定时开关日志 |
 
 ---
 
