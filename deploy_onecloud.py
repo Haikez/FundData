@@ -25,7 +25,6 @@ if not site_pkg:
     site_pkg = _site.getsitepackages()[0]
 wheels = sorted(glob.glob("/opt/fund007751/pip_packages/*.whl"))
 if not wheels:
-    # 打印诊断信息
     import subprocess
     result = subprocess.run(["ls", "-la", "/opt/fund007751/pip_packages/"],
                           capture_output=True, text=True)
@@ -85,10 +84,10 @@ def upload_pip_wheels(sftp):
     for whl in sorted(os.listdir(local_dir)):
         if whl.endswith(".whl"):
             local = os.path.join(local_dir, whl)
-            remote = os.path.join(remote_dir, whl)
+            remote = f"{remote_dir}/{whl}"  # 用 / 拼接，避免 Windows 反斜杠问题
             size = os.path.getsize(local)
             sftp.put(local, remote)
-            print(f"  ✓ pip_packages/{whl} ({size//1024}KB)")
+            print(f"  ✓ pip_packages/{whl} ({size // 1024}KB)")
             count += 1
     return count
 
@@ -96,12 +95,11 @@ def upload_pip_wheels(sftp):
 def verify_remote_whl_count(ssh):
     """验证远程 .whl 文件数量，失败则中止"""
     code, out, err = run_ssh(ssh,
-        'ls -la /opt/fund007751/pip_packages/*.whl 2>&1 | grep "^-" | wc -l',
+        'ls /opt/fund007751/pip_packages/*.whl 2>&1 | grep -c ".whl"',
         "验证 wheel 包数量")
     try:
         n = int(out.strip())
         if n == 0:
-            # 诊断：列出目录内容
             run_ssh(ssh, "ls -la /opt/fund007751/pip_packages/", "pip_packages 目录内容")
             die("远程 pip_packages/ 中没有 .whl 文件")
         print(f"    → {n} 个 wheel 包")
@@ -150,7 +148,8 @@ def main():
     for f in core_files:
         local = os.path.join(os.path.dirname(__file__), f)
         if os.path.exists(local):
-            sftp.put(local, f"{PROJECT_DIR}/{f}")
+            remote = f"{PROJECT_DIR}/{f}"  # 用 / 拼接
+            sftp.put(local, remote)
             print(f"  ✓ {f}")
 
     whl_count = upload_pip_wheels(sftp)
