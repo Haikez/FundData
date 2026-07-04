@@ -20,9 +20,11 @@ TMP_DIR=$(mktemp -d)
 mkdir -p "${TMP_DIR}/${PROJECT}"
 
 cp fund_crawler.py   "${TMP_DIR}/${PROJECT}/"
+cp led_scheduler.py  "${TMP_DIR}/${PROJECT}/"
 cp requirements.txt  "${TMP_DIR}/${PROJECT}/"
 cp setup.sh          "${TMP_DIR}/${PROJECT}/"
 cp led控制伪代码.txt  "${TMP_DIR}/${PROJECT}/"
+cp -r pip_packages   "${TMP_DIR}/${PROJECT}/"
 
 # 设置权限
 chmod +x "${TMP_DIR}/${PROJECT}/setup.sh"
