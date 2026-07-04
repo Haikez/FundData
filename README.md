@@ -63,32 +63,17 @@ OneCloud（Armbian）可能无法访问 PyPI，安装方式为直接解压 `.whl
 
 ## 🚀 部署到 OneCloud
 
-### 方式一：SSH 一键部署（打包传输）
-
 ```bash
-# 本地打包
-bash deploy.sh
-
-# 上传到 OneCloud
-scp fund007751_*.tar.gz root@<OneCloud_IP>:/tmp/
-ssh root@<OneCloud_IP>
-cd /opt
-tar xzf /tmp/fund007751_*.tar.gz
-bash /opt/fund007751/setup.sh
-```
-
-### 方式二：Python 自动部署
-
-```bash
-# 先修改 deploy_onecloud.py 中的 IP 和密码
+# 1. 修改 deploy_onecloud.py 中的 IP 和密码
+# 2. 运行自动部署
 python deploy_onecloud.py
 ```
 
-### setup.sh 会自动完成
-
+部署脚本会自动完成：
+- ✅ 上传所有文件到 `/opt/fund007751/`
 - ✅ 离线安装 Python 依赖（解压 `pip_packages/*.whl`）
-- ✅ 校验 OneCloud LED 设备
 - ✅ 添加 crontab 定时任务
+- ✅ 首次运行爬虫验证
 
 ### crontab 最终配置
 
