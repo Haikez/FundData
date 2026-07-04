@@ -20,7 +20,7 @@
 | `requirements.txt` | Python 依赖清单 |
 | `pip_packages/` | **离线 wheel 包** — `requests` 及其依赖的 `.whl` 文件，供无网络的 OneCloud 离线安装 |
 
-### pip_packages/ 来源
+### pip_packages/ 
 
 `pip_packages/` 目录包含 `requests` 及其依赖（`urllib3`, `certifi`, `idna`, `charset_normalizer`）的纯 Python wheel 包，通过以下命令生成：
 
@@ -82,6 +82,9 @@ bash /opt/fund007751/setup.sh
 ### 方式二：Python 自动部署
 
 ```bash
+# 本地打包
+bash deploy.sh
+
 # 先修改 deploy_onecloud.py 中的 IP 和密码以及压缩包的名称
 python deploy_onecloud.py
 ```
@@ -107,6 +110,40 @@ python deploy_onecloud.py
 0  22 * * *    → led_scheduler.py off  (熄灯)
 0  7  * * *    → led_scheduler.py on   (恢复：估值灯)
 ```
+
+---
+
+### 玩客云服务器目录结构
+
+部署到 OneCloud 后，项目在 `/opt/fund007751/` 下：
+
+```
+/opt/fund007751/
+├── fund_crawler.py              # 主程序
+├── led_scheduler.py             # LED 定时开关
+├── setup.sh                     # 部署脚本（首次运行后保留）
+├── requirements.txt             # 依赖清单
+├── led控制伪代码.txt             # LED 原始说明
+├── pip_packages/                # 离线 wheel 包
+│   ├── certifi-*.whl
+│   ├── charset_normalizer-*.whl
+│   ├── idna-*.whl
+│   ├── requests-*.whl
+│   └── urllib3-*.whl
+├── .led_state                   # 上次 LED 状态快照（JSON）
+├── fund_007751_*.json           # 每日净值数据归档
+└──                              # ── 以下由 setup.sh 创建 ──
+/var/log/fund007751/
+    ├── crawler.log              # 爬虫运行日志
+    └── led.log                  # LED 定时开关日志
+```
+
+| 文件 | 说明 |
+|------|------|
+| `fund_007751_*.json` | 每次运行自动生成的数据快照，含净值、PE、估值判断 |
+| `.led_state` | LED 状态持久化文件，供 `led_scheduler.py` 恢复灯色用 |
+| `crawler.log` | 爬虫运行日志（crontab 重定向） |
+| `led.log` | LED 定时开关日志 |
 
 ---
 

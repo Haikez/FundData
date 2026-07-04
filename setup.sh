@@ -12,6 +12,9 @@ echo "  基金 007751 LED 看板 - OneCloud 部署脚本"
 echo "============================================"
 echo ""
 
+# 0. 确保日志目录存在
+mkdir -p "$LOG_DIR"
+
 # 1. 安装 Python 依赖
 echo "[1/4] 安装 Python 依赖..."
 if ! command -v python3 &>/dev/null; then
