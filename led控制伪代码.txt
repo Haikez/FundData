@@ -1,0 +1,21 @@
+低估时运行bash脚本：
+# 关闭所有的灯
+echo 0 > /sys/class/leds/onecloud:red:alive/brightness
+echo 0 > /sys/class/leds/onecloud:blue:alive/brightness
+echo 0 > /sys/class/leds/onecloud:green:alive/brightness
+# 绿灯常亮
+echo "none" >/sys/class/leds/onecloud\:red\:alive/trigger
+echo "default-on" >/sys/class/leds/onecloud\:green\:alive/trigger 
+echo "none" >/sys/class/leds/onecloud\:blue\:alive/trigger 
+
+高估时运行bash脚本：
+# 关闭所有的灯
+echo 0 > /sys/class/leds/onecloud:red:alive/brightness
+echo 0 > /sys/class/leds/onecloud:blue:alive/brightness
+echo 0 > /sys/class/leds/onecloud:green:alive/brightness
+
+# 绿灯常亮
+echo "none" >/sys/class/leds/onecloud\:blue\:alive/trigger
+echo "default-on" >/sys/class/leds/onecloud\:red\:alive/trigger 
+echo "none" >/sys/class/leds/onecloud\:green\:alive/trigger 
+

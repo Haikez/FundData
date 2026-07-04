@@ -1,0 +1,25 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+
+# 运行时生成的数据文件
+fund_007751_*.json
+
+# 部署包 / 临时文件
+*.tar.gz
+pip_packages/
+get-pip.py
+
+# 导出/日志
+*.log
+2026-07-02-211650-python007751.txt
+
+# IDE/系统
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
