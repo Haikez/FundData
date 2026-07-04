@@ -190,6 +190,22 @@ def main():
 
     run_ssh(ssh, f"cd {PROJECT_DIR} && python3 fund_crawler.py", "首次运行", timeout=60)
 
+    # 清理安装文件
+    print("\n🧹 清理安装文件...")
+    cleanup = [
+        f"rm -f {PROJECT_DIR}/setup.sh",
+        f"rm -f {PROJECT_DIR}/led控制伪代码.txt",
+        f"rm -rf {PROJECT_DIR}/pip_packages",
+        f"rm -f {PROJECT_DIR}/install_deps.py",
+        f"rm -f {PROJECT_DIR}/deploy_onecloud.py",
+    ]
+    for cmd in cleanup:
+        run_ssh(ssh, cmd, timeout=10)
+    print("  ✅ 安装文件已清理，仅保留运行必需文件")
+
+    print("\n📂 保留的文件:")
+    run_ssh(ssh, f"ls -lh {PROJECT_DIR}/", timeout=10)
+
     ssh.close()
     print()
     print("=" * 56)
