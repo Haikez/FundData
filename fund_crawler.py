@@ -730,15 +730,16 @@ def main():
             led_error()
             print("  ⚠️  无估值数据，设置红灯闪烁警示")
     else:
-        # 工作日 → 涨跌指示灯
+        # 工作日 → 涨跌指示灯 (使用实时估算涨跌幅, 15:00收盘即更新)
         print(f"  📅 交易日模式: 按涨跌显示")
-        if nav_list:
+        if basic and basic.get("gszzl"):
             try:
-                change_str = nav_list[0].get("JZZZL", "0")
-                change_val = float(change_str) if change_str else 0.0
+                gszzl = basic.get("gszzl", "0")
+                change_val = float(gszzl) if gszzl else 0.0
+                nav_date = basic.get("jzrq", "")
+                est_time = basic.get("gztime", "")
                 led_change(change_val)
 
-                # 构建状态文字
                 if change_val > 0:
                     status = f"今日涨 {change_val:+.2f}%"
                 elif change_val < 0:
@@ -747,7 +748,7 @@ def main():
                     status = "今日平盘 0.00%"
                 _save_led_state(status, pe_value=float(current_pe) if current_pe else None,
                                 mode="涨跌", change_pct=change_val)
-                print(f"  ✅ LED 已根据涨跌幅设置 ({change_val:+.2f}%)")
+                print(f"  ✅ LED 已根据估算涨跌幅设置 ({change_val:+.2f}%, 数据时间:{est_time})")
             except Exception as e:
                 led_error()
                 print(f"  ⚠️  LED 控制异常: {e}")
